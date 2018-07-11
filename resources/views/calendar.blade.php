@@ -22,7 +22,7 @@
         <div class="checkbox" ng-repeat="day in event.weekDays">
             <label><input type="checkbox" ng-model="day.isChecked">@{{ day.label }}</label>
         </div>
-        <button type="button" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
     </div>
 
     <div class="form-group">
@@ -31,14 +31,14 @@
         <table class="table">
             <tbody>
                 <tr ng-repeat="day in event.fromDays">
-                    <td>@{{ day.day }} @{{ day.dayName }}</td>
+                    <td ng-class="{success: isMatch(day)}">@{{ day.day }} @{{ day.dayName }}</td>
                     <td></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" ng-if="event.query.fromMonthYear != event.query.toMonthYear">
         <h4>@{{ event.query.toMonthYear }}</h4>
 
         <table class="table">

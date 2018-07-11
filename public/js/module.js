@@ -14,7 +14,7 @@ app.directive('datepicker', function () {
 });
 app.controller('EventController', function($scope, $http) {
 
-    $scope.event = {query: {}, data: {}, days: []};
+    $scope.event = {query: {}, data: {}, fromDays: [], toDays: []};
     $scope.event.weekDays = [
         {label: 'Mon', isChecked: false},
         {label: 'Tue', isChecked: false},
@@ -25,11 +25,27 @@ app.controller('EventController', function($scope, $http) {
         {label: 'Sun', isChecked: false}
     ];
 
+    // Returns an array of dates between the two dates
+    var getDates = function(startDate, endDate) {
+        var dates = [],
+            currentDate = startDate,
+            addDays = function(days) {
+                var date = new Date(this.valueOf());
+                date.setDate(date.getDate() + days);
+                return date;
+            };
+        while (currentDate <= endDate) {
+            var test = moment(currentDate).format('MM/DD/YYYY,ddd');
+            dates.push(test);
+            currentDate = addDays.call(currentDate, 1);
+        }
+        return dates;
+    };
+
     init();
 
     function init()
     {
-
         console.log('EventController');
         console.log(moment("2012-02", "YYYY-MM").daysInMonth());
         console.log(moment("2012-01", "YYYY-MM").daysInMonth());
@@ -56,6 +72,8 @@ app.controller('EventController', function($scope, $http) {
             mDate = moment($scope.event.query.from, "YYYY-MM-DD").format('YYYY-MM') + "-"  + i;
 
             day.dayName = moment(mDate, "YYYY-MM-DD").format('ddd');
+            day.year = moment(mDate, "YYYY-MM-DD").format('YYYY');
+            day.month = moment(mDate, "YYYY-MM-DD").format('MM');
             fromDays.push(day);
         }
 
@@ -69,14 +87,69 @@ app.controller('EventController', function($scope, $http) {
             day.dayName = moment(mDate, "YYYY-MM-DD").format('ddd');
             toDays.push(day);
         }
-
+        
         $scope.event.fromDays = fromDays;
         $scope.event.toDays = toDays;
 
         console.log($scope.event);
 
         return fromMonth;
+    };
+
+    $scope.save = function()
+    {
+        $scope.event.data.events = angular.copy([]);
+        var d1 = $scope.event.query.from.split("-");
+        var d2 = $scope.event.query.to.split("-")
+        var toSaveEventWeeks = [];
+
+        for (var i in $scope.event.weekDays)
+        {
+            var day = $scope.event.weekDays[i];
+
+            if (day.isChecked) {
+                toSaveEventWeeks.push(day.label);
+            }
+        }
+
+        var dates = getDates(new Date(d1[0],d1[1] - 1,d1[2]), new Date(d2[0],d2[1] - 1,d2[2]));
+
+        dates.forEach(function(date) {
+            var weekDay = date.split(",")[1];
+            var mDate = date.split(",")[0];
+
+            console.log('to match weekday');
+            console.log(weekDay);
+            if (toSaveEventWeeks.includes(weekDay) > 0) {
+                console.log('--------------day found match-------------');
+                console.log(date)
+                $scope.event.data.events.push({event_date: mDate});
+            }
+        });
+
+        console.log($scope.event);
     }
 
+    $scope.isMatch = function(matcher)
+    {
+       // console.log(matcher);
 
+        for (var i in $scope.event.data.events)
+        {
+            var event = $scope.event.data.events[i];
+            var d = matcher.day;
+            if (matcher.day < 10) {
+                d = '0' + d;
+            }
+
+            var matcherStr = matcher.month + '/' + d + '/' + matcher.year;
+
+            console.log(matcherStr);
+            console.log(event.event_date);
+            if (event.event_date == matcherStr) {
+                return true;
+            }
+        }
+        return false;
+    }
 });
