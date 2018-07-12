@@ -13,6 +13,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"></script>
     <script src="{{ asset('js/module.js') }}"></script>
 </head>
+    <script>
+        var ROOT_URL = '{{ url('/') }}';
+    </script>
     <body ng-app="app" ng-controller="EventController" ng-cloak>
         <div class="container">
             @yield('content')

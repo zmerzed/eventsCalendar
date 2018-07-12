@@ -38,13 +38,13 @@
         </table>
     </div>
 
-    <div class="form-group" ng-if="event.query.fromMonthYear != event.query.toMonthYear">
+    <div class="form-group">
         <h4>@{{ event.query.toMonthYear }}</h4>
 
         <table class="table">
             <tbody>
             <tr ng-repeat="day in event.toDays">
-                <td>@{{ day.day }} @{{ day.dayName }}</td>
+                <td ng-class="{success: isMatch(day)}">@{{ day.day }} @{{ day.dayName }}</td>
                 <td></td>
             </tr>
             </tbody>

@@ -24,6 +24,7 @@ app.controller('EventController', function($scope, $http) {
         {label: 'Sat', isChecked: false},
         {label: 'Sun', isChecked: false}
     ];
+    $scope.postHeader = {headers: {'Content-Type': 'application/json'}};
 
     // Returns an array of dates between the two dates
     var getDates = function(startDate, endDate) {
@@ -35,7 +36,7 @@ app.controller('EventController', function($scope, $http) {
                 return date;
             };
         while (currentDate <= endDate) {
-            var test = moment(currentDate).format('MM/DD/YYYY,ddd');
+            var test = moment(currentDate).format('YYYY-MM-DD,ddd');
             dates.push(test);
             currentDate = addDays.call(currentDate, 1);
         }
@@ -50,6 +51,23 @@ app.controller('EventController', function($scope, $http) {
         console.log(moment("2012-02", "YYYY-MM").daysInMonth());
         console.log(moment("2012-01", "YYYY-MM").daysInMonth());
         console.log(moment("2012-12", "YYYY-MM").month());
+
+        /* get the latest event */
+        $http.get(ROOT_URL + '/api/events').then(function(res) {
+
+            var mEvents = res.data.latest_event.details;
+
+            $scope.event.data = {
+                events: mEvents,
+                name: res.data.latest_event.name
+            };
+
+
+            $scope.event.query.from = res.data.latest_event.from;
+            $scope.event.query.to = res.data.latest_event.to;
+            console.log($scope.event);
+            $scope.getMonthYear();
+        });
     }
 
     $scope.getMonthYear = function()
@@ -85,6 +103,8 @@ app.controller('EventController', function($scope, $http) {
             mDate = moment($scope.event.query.to, "YYYY-MM-DD").format('YYYY-MM') + "-"  + i;
 
             day.dayName = moment(mDate, "YYYY-MM-DD").format('ddd');
+            day.year = moment(mDate, "YYYY-MM-DD").format('YYYY');
+            day.month = moment(mDate, "YYYY-MM-DD").format('MM');
             toDays.push(day);
         }
         
@@ -127,13 +147,22 @@ app.controller('EventController', function($scope, $http) {
             }
         });
 
+        $scope.event.data.from = $scope.event.query.from;
+        $scope.event.data.to = $scope.event.query.to;
+        $scope.event.data.weekDays = toSaveEventWeeks;
+        $http.post(
+            ROOT_URL + '/api/events', $scope.event.data, $scope.postHeader
+        ).then(function(res) {
+
+            console.log(res);
+        });
+
         console.log($scope.event);
-    }
+    };
 
     $scope.isMatch = function(matcher)
     {
-       // console.log(matcher);
-
+        console.log(matcher);
         for (var i in $scope.event.data.events)
         {
             var event = $scope.event.data.events[i];
@@ -142,14 +171,14 @@ app.controller('EventController', function($scope, $http) {
                 d = '0' + d;
             }
 
-            var matcherStr = matcher.month + '/' + d + '/' + matcher.year;
+            var matcherStr = matcher.year + '-' + matcher.month + '-' + d;
 
-            console.log(matcherStr);
-            console.log(event.event_date);
             if (event.event_date == matcherStr) {
                 return true;
             }
         }
         return false;
-    }
+    };
+
+
 });

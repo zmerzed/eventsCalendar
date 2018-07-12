@@ -15,6 +15,10 @@ class CreateEventsMasterTable extends Migration
     {
         Schema::create('eventsMaster', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->date('from');
+            $table->date('to');
+            $table->string('weekDays');
             $table->timestamps();
         });
     }

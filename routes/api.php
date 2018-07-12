@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('events', ['as' => 'event.add', 'uses' => 'CalendarController@add']);
+Route::get('events', ['as' => 'event.get', 'uses' => 'CalendarController@get']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

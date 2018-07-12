@@ -16,6 +16,7 @@ class CreateEventsDetailTable extends Migration
         Schema::create('eventsDetail', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('event_id')->unsigned();
+            $table->date('event_date');
             $table->foreign('event_id')->references('id')->on('eventsMaster');
             $table->timestamps();
         });
