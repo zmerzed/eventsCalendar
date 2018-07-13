@@ -1,12 +1,21 @@
 <?php
 
-//$url = parse_urL(getenv("DATABASE_URL"));
-//$host = $url["host"]?? null;
-//$username = $url["user"];
-//$password = $url["password"];
-//$database = substr($url["path"], 1);
+$DATABASE_URL = [];
 
-$DATABASE_URL = parse_url(getenv("DATABASE_URL"));
+if (env("APP_ENV") == "local") {
+    $DATABASE_URL = array(
+        'host' => '',
+        'port' => '',
+        'user' => '',
+        'pass' => '',
+        'path' => ''
+    );
+}
+else {
+
+    $DATABASE_URL = parse_url(getenv("DATABASE_URL"));
+}
+
 return [
 
     /*

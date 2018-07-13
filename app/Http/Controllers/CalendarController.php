@@ -16,9 +16,9 @@ class CalendarController extends Controller
 
     protected function index()
     {
-        return view('calendar');
+        return view('calendar2');
     }
-
+    
     protected function add()
     {
 
@@ -43,11 +43,14 @@ class CalendarController extends Controller
                     'created_at' => $date_time,
                     'updated_at' => $date_time
                 ]);
-                //$events[$key]['event_id'] = $event->id;
             }
         }
 
-        dd($events);
+        $latestEvent = Event::orderBy('id', 'desc')->with('details')->first();
+
+        return Response()->json([
+            'latest_event' => $latestEvent
+        ], 200);
     }
 
     protected function get()

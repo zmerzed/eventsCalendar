@@ -50,10 +50,4 @@
             </tbody>
         </table>
     </div>
-
-    <div style="word-wrap: break-word;">
-
-            @{{ event }}
-
-    </div>
 @endsection

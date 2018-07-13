@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/calendar', ['as' => 'page.calendar', 'uses' => 'CalendarController@index'] );
+Route::get('/calendar', ['as' => 'page.calendar2', 'uses' => 'CalendarController@index'] );
