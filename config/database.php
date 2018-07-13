@@ -1,5 +1,12 @@
 <?php
 
+//$url = parse_urL(getenv("DATABASE_URL"));
+//$host = $url["host"]?? null;
+//$username = $url["user"];
+//$password = $url["password"];
+//$database = substr($url["path"], 1);
+
+$DATABASE_URL = parse_url(getenv("DATABASE_URL"));
 return [
 
     /*
@@ -13,7 +20,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,6 +62,19 @@ return [
         ],
 
         'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => $DATABASE_URL["host"],
+            'port' => $DATABASE_URL["port"],
+            'database' => ltrim($DATABASE_URL["path"], "/"),
+            'username' => $DATABASE_URL["user"],
+            'password' => $DATABASE_URL["pass"],
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'require',
+        ],
+
+        'pgsql_production' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
