@@ -11,7 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"></script>
-    <script src="https://powerful-reef-51221.herokuapp.com/js/module.js"></script>
+    <script src="{{ asset('js/module.js') }}"></script>
 </head>
     <script>
         var ROOT_URL = '{{ url('/') }}';
