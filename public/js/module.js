@@ -65,7 +65,19 @@ app.controller('EventController', function($scope, $http) {
 
             $scope.event.query.from = res.data.latest_event.from;
             $scope.event.query.to = res.data.latest_event.to;
-            console.log($scope.event);
+
+            var defWeekDays = res.data.latest_event.weekDays;
+
+            $scope.event.weekDays.forEach(function(w) {
+
+                if (defWeekDays.includes(w.label) > 0) {
+
+                    console.log('exist day');
+                    w.isChecked = true;
+                }
+
+            });
+            console.log(defWeekDays);
             $scope.getMonthYear();
         });
     }
